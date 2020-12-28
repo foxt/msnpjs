@@ -13,5 +13,6 @@ const MSNPConnection = require("./index")
     setInterval(async function() {
         dnd = !dnd
         await conn.setPresence(dnd ? "BSY" : "NLN")
+        await conn.logout()
     },5000)
 })()

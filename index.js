@@ -2,6 +2,7 @@ const { EventEmitter } = require("events")
 const os = require("os")
 const net = require("net")
 const tweener = require("./tweener")
+const { Socket } = require("dgram")
 
 const VALID_PRESENCES = [
     "NLN", // Available
@@ -43,7 +44,7 @@ class MSNPConnection extends EventEmitter {
     msgRecieving = false
     parseData(data) {
         var string = data.toString()
-        //this.dbg("data in",string)
+        this.dbg("data in",string)
         if (!this.msgRecieving && string.startsWith("MSG")) {
             this.msgBytesRequired = parseInt(string.split("\r\n")[0].split(" ")[3])
             this.msgBytes = string
@@ -101,6 +102,11 @@ class MSNPConnection extends EventEmitter {
     initAuthentication() {
         this.sendCommand("USR","TWN","I",this.passport)
         return this.waitFor("twnRequest")
+    }
+    logout() {
+        this.sendCommand("OUT")
+        this.conn.end()
+        return this.waitFor("loggingOut")
     }
 
     // AUTHENTICATION
