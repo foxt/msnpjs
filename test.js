@@ -5,6 +5,7 @@ const MSNPConnection = require("./index")
     conn.on("disconnected",console.error)
     conn.on("socketError",console.error)
     conn.on("selfPresenceChanged",console.log)
+    conn.on("msgRecieved",console.log)
     var auth = await conn.login(process.argv[2]);
     console.log("we authed boys",auth)
     var dnd = false

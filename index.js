@@ -37,10 +37,34 @@ class MSNPConnection extends EventEmitter {
             console.debug(...args)
         }
     }
+    msgBytesRecieved = 0
+    msgBytesRequired = 0
+    msgBytes = ""
+    msgRecieving = false
     parseData(data) {
-        var string = data.toString().trim()
+        var string = data.toString()
         //this.dbg("data in",string)
-        var split = string.split(" ")
+        if (!this.msgRecieving && string.startsWith("MSG")) {
+            this.msgBytesRequired = parseInt(string.split("\r\n")[0].split(" ")[3])
+            this.msgBytes = string
+            this.msgBytesRecieved = string.length
+            this.msgRecieving = true
+            return
+        }
+        if (this.msgRecieving) {
+            this.dbg("got " + this.msgBytesRecieved + "/" + this.msgBytesRequired)
+            this.msgBytes += string
+            this.msgBytesRecieved += string.length
+            if (this.msgBytesRecieved >= this.msgBytesRequired) {
+                this.msgRecieving = false
+                string = this.msgBytes
+            }else {
+                return
+            }
+        }
+        
+        var split = string.trim().split(" ")
+        
         try {
             var hndlr = require("./handlers/" + split[0] + ".js").bind(this)
             hndlr(split)
