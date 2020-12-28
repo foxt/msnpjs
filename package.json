@@ -1,0 +1,22 @@
+{
+  "name": "msnpjs",
+  "version": "1.0.0",
+  "description": "A nodejs implementation of the MSNP protocol",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thelmgn/msnpjs.git"
+  },
+  "author": "theLMGN",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/thelmgn/msnpjs/issues"
+  },
+  "homepage": "https://github.com/thelmgn/msnpjs#readme",
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}
