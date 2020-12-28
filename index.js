@@ -2,7 +2,7 @@ const { EventEmitter } = require("events")
 const os = require("os")
 const net = require("net")
 const tweener = require("./tweener")
-const { Socket } = require("dgram")
+const SwitchboardConnection = require("./sb")
 
 const VALID_PRESENCES = [
     "NLN", // Available
@@ -104,9 +104,12 @@ class MSNPConnection extends EventEmitter {
         return this.waitFor("twnRequest")
     }
     logout() {
-        this.sendCommand("OUT")
+        this.conn.write("OUT\r\n")
         this.conn.end()
-        return this.waitFor("loggingOut")
+    }
+    ping() {
+        this.conn.write("PNG\r\n")
+        return this.waitFor("pong")
     }
 
     // AUTHENTICATION
@@ -132,3 +135,4 @@ class MSNPConnection extends EventEmitter {
 
 module.exports = MSNPConnection
 module.exports.Tweener = tweener
+module.exports.Switchboard = SwitchboardConnection
