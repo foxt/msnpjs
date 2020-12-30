@@ -1,18 +1,26 @@
 const MSNPConnection = require("./index")
+const conn = new MSNPConnection("vmpmc@hotmail.com",{
+    capabilities: 17021669
+})
+module.exports = conn
 ;(async function () {
-    const conn = new MSNPConnection("vmpmc@hotmail.com")
-    conn.debug = true
+    
+    //conn.debug = true
     conn.on("disconnected",console.error)
     conn.on("socketError",console.error)
     conn.on("selfPresenceChanged",console.log)
     conn.on("msgRecieved",console.log)
     var auth = await conn.login(process.argv[2]);
     console.log("we authed boys",auth)
-    var dnd = false
     await conn.setPresence("NLN")
-    setInterval(async function() {
-        dnd = !dnd
-        await conn.setPresence(dnd ? "BSY" : "NLN")
-        await conn.logout()
-    },5000)
+    conn.on("invitationRecieved",function(err,invitation) {
+        var sbc = new MSNPConnection.Switchboard(conn.passport,invitation)
+        sbc.debug = true
+        global.sbc = sbc
+        sbc.on("rosterComplete",console.log)
+        sbc.on("msgRecieved",console.log)
+        console.log(sbc)
+    })
+
+
 })()
