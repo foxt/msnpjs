@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
       "outDir": "./bin",
+      "strict": true,
       "allowJs": true,
       "isolatedModules": true,
       "module": "commonjs",

@@ -1,9 +1,7 @@
 import { MSNPConnection } from "./index.js";
-import { SwitchboardConnection } from "./sb/index.js";
+import { MSNPInvitation, SwitchboardConnection } from "./sb/index.js";
 
-export const conn = new MSNPConnection("vmpmc@hotmail.com", {
-    capabilities: 17021669
-});
+export const conn = new MSNPConnection("vmpmc@hotmail.com");
 ;(async function() {
     // conn.debug = true
     conn.on("disconnected", console.error);
@@ -13,11 +11,10 @@ export const conn = new MSNPConnection("vmpmc@hotmail.com", {
     let auth = await conn.login(process.argv[2]);
     console.log("we authed boys", auth);
     await conn.setPresence("NLN");
-    conn.on("invitationRecieved", (err, invitation) => {
+    conn.on("invitationRecieved", (invitation: MSNPInvitation) => {
         console.log("ring ring!");
         let sbc = new SwitchboardConnection(conn.passport, invitation);
         sbc.debug = true;
-        global.sbc = sbc;
         sbc.on("rosterComplete", console.log);
         sbc.on("msgRecieved", console.log);
         console.log(sbc);

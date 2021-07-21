@@ -1,8 +1,8 @@
-export function parseMsg(data) {
+export function parseMsg(data:string[]) {
     let s = data.join(" ").split("\r\n");
     let fl = s.shift();
-    let cmd = fl.split(" ");
-    let headers = {};
+    let cmd = fl!.split(" ");
+    let headers: Map<string,string> = new Map<string,string>();
     let d = [];
     let headersOver = false;
     for (let l of s) {
@@ -10,7 +10,7 @@ export function parseMsg(data) {
             let sp = l.split(":");
             let headerName = sp.shift();
             let headerValue = sp.join(":").trim();
-            headers[headerName] = headerValue;
+            headers.set(headerName!, headerValue);
         } else if (!headersOver && l.length < 2) {
             headersOver = true;
         } else {

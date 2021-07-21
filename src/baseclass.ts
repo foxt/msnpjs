@@ -12,7 +12,7 @@ export class MSNPBaseClass extends EventEmitter {
         this.conn.on("error",(e) => {this.emit("socketError",e)})
         this.conn.on("data",this.parseData.bind(this))
     }
-    dbg(...args) {
+    dbg(...args: any[]) {
         if (this.debug || true) {
             console.debug("=============")
             console.debug(...args)
@@ -50,15 +50,9 @@ export class MSNPBaseClass extends EventEmitter {
         this.emit("raw_" + split[0], split);
     }
     waitFor(eventName:string): Promise<string[]> {
-        return new Promise(function(a,r) {
-            this.once(eventName,(err,data) => {
-                if (err) {
-                    this.dbg(err)
-                    return r(err);
-                } 
-                return a(data) 
-            })
-        }.bind(this))
+        return new Promise(((a: (value: string[]) => void) => {
+            this.once(eventName,(data: string[]) => a(data) )
+        }).bind(this))
     }
     sendCommand(commandName:string, ...args:string[]): void {
         this.trid += 1;
