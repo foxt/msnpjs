@@ -5,7 +5,7 @@ export class MSNPBaseClass extends EventEmitter {
     conn: Socket;
     debug = true;
     trid = 0;
-    constructor(ip,port) {
+    constructor(ip:string,port:number) {
         super()
         this.conn = createConnection({host: ip, port: port})
         this.conn.on("close",() => {this.emit("disconnected")})
@@ -15,7 +15,7 @@ export class MSNPBaseClass extends EventEmitter {
     dbg(...args) {
         if (this.debug || true) {
             console.debug("=============")
-        console.debug(...args)
+            console.debug(...args)
         }
     }
 
@@ -23,7 +23,7 @@ export class MSNPBaseClass extends EventEmitter {
     msgBytesRequired = 0
     msgBytes = ""
     msgRecieving = false
-    parseData(data) {
+    parseData(data:string):void {
         var string = data.toString()
         //this.dbg("data in",string)
         if (!this.msgRecieving && string.startsWith("MSG")) {
@@ -49,7 +49,7 @@ export class MSNPBaseClass extends EventEmitter {
         
         this.emit("raw_" + split[0], split);
     }
-    waitFor(eventName) {
+    waitFor(eventName:string): Promise<string[]> {
         return new Promise(function(a,r) {
             this.once(eventName,(err,data) => {
                 if (err) {
@@ -60,7 +60,7 @@ export class MSNPBaseClass extends EventEmitter {
             })
         }.bind(this))
     }
-    sendCommand(commandName, ...args) {
+    sendCommand(commandName:string, ...args:string[]): void {
         this.trid += 1;
         this.dbg("data out",[commandName,this.trid,...args].join(" ") + "\r\n")
         this.conn.write([commandName,this.trid,...args].join(" ") + "\r\n")   
