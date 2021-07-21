@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "outDir": "./bin",
+      "allowJs": true,
+      "isolatedModules": true,
+      "module": "commonjs",
+      "target": "ES2018",
+      "lib": ["ES2019"],
+      "sourceMap": true
+    },
+    "include": ["./src/**/*"]
+  }
